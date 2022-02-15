@@ -1,0 +1,26 @@
+W arcgisie jest skomplikowana kompozycja licząca ponad 300 warstw, a jednym z wymagań
+
+kluczemwyszukiwania musi być CIM*Color
+
+najpierw zrobić listę unikalnych kolorów, bez informacji czego dotyczą
+
+nie można bazować na unikalnej liście definicji kolorów, trzeba też odnotować czego to jest kolor
+
+CIM.*Color występuje w węzłach "color", ,"shadowColor" i "symbolLayers"
+
+Koncepcja: 
+Podwójna iteracja po pliku - odczyt informacji z wyszukaniem potencjalnych zmian oraz, przy kolejnej iteracji,
+ zapis tych zmian do pliku.
+aby uzyskać kompleksową informację o kolorach oraz miejscach ich występowania, najlepszym sposobem wydaje się
+iteracja po całym jsonie, robocze zapisywania ścieżki dojścia do danych elementów i w przypadku trafienia w kolor oraz
+występowania określonych stringów w ścieżce - podmiana wartości koloru w następujący sposób: zapisanie ścieżki oraz 
+koloru na osobnej liście, na podstawie której następnie należałoby wprowadzać zmiany w pliku.
+
+pobieranie/zapisywanie danych python-json:
+https://www.kite.com/python/answers/how-to-update-a-json-file-in-python
+wyciąganie info z jsona
+https://hackersandslackers.com/extract-data-from-complex-json-python/
+
+
+Wymyślone rozwiązanie do przetestowania:
+na wejściu ścieżka, np. ['layerDefinitions'][0], wejście dictItems do tej ścieżki i zmiana wszystkich kolorów poniżej jej.
