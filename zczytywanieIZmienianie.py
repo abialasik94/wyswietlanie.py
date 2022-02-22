@@ -49,7 +49,7 @@ def mapxChange(data, **kwargs):
             else:
                 global pathsWithoutListIndexes
                 isValue = getFromDict(data, path)
-                if re.match(kwargs['colorModel'], str(v)) and 'values' in isValue and kwargs['actualCsvRow']:
+                if re.match(kwargs['colorModel'], str(v)) and 'values' in isValue:
                     pathWithColorsToChange = path + ['values']
                     actualColors = getFromDict(data, pathWithColorsToChange)
                     colorModel = getFromDict(data, path + ['type'])
@@ -60,11 +60,11 @@ def mapxChange(data, **kwargs):
                     if layerName != "":
                         change = kwargs['actualCsvRow']
                         try:
-                            colorsToChange = [int(change[9]),int(change[10]),int(change[11]),int(change[12])]
+                            colorsToChange = [int(change[7]),int(change[8]),int(change[9]),int(change[10])]
                         except:
                             colorsToChange = 0
-                        if  len(change)>14 and str.strip(change[7]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[14]):
-                            print("Zmieniono kolor dla wiersza nr " + kwargs['rowIndex'])
+                        if  str.strip(change[6]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[12]):
+                            print("Zmieniono kolor dla wiersza nr " + str(kwargs['rowIndex']))
                             setInDict(data, pathWithColorsToChange, [int(change[0]),int(change[1]),int(change[2]),int(change[3])])
     dictIter(data, **kwargs)
 
@@ -83,7 +83,7 @@ for i, change in enumerate(csv):
     except:
         #print("Nie podano liczb dla wiersza nr " + str(i))
         pass
-    if change[0] and change[1] and change[2] and change[3]:
+    if i > 2 and isinstance(change[0], (float)) and isinstance(change[1], (float)) and isinstance(change[2], (float)) and isinstance(change[3], (float)):
         mapxChange(data, colorModel = r"CIM.*Color", actualCsvRow = change, rowIndex = i)
     #else:
         #print("Kolor dla wiersza nr " + str(i) + " nie został zmieniony")
