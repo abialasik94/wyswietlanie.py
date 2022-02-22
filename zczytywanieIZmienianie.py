@@ -49,7 +49,7 @@ def mapxChange(data, **kwargs):
             else:
                 global pathsWithoutListIndexes
                 isValue = getFromDict(data, path)
-                if re.match(kwargs['colorModel'], str(v)) and 'values' in isValue and kwargs['dataFromCsv']:
+                if re.match(kwargs['colorModel'], str(v)) and 'values' in isValue and kwargs['actualCsvRow']:
                     pathWithColorsToChange = path + ['values']
                     actualColors = getFromDict(data, pathWithColorsToChange)
                     colorModel = getFromDict(data, path + ['type'])
@@ -58,19 +58,19 @@ def mapxChange(data, **kwargs):
                     except:
                         layerName = ""
                     if layerName != "":
-                        print(layerName)
+                        #print(layerName)
+                        change = kwargs['actualCsvRow']
                         #pathWithoutCModelAColors = pathWithoutListIndexes + ['values'] + [str(colorModel)] + [str(actualColors)] + [layerName]
-                        for change in kwargs['dataFromCsv']:
-                            try:
-                                colorsToChange = [int(change[9]),int(change[10]),int(change[11]),int(change[12])]
-                            except:
-                                colorsToChange = 0
-                            #pathOfColorToChange = ''
-                            #for pathElement in change[14:]:
-                            #    pathOfColorToChange += str.strip(pathElement)
-                            if  len(change)>14 and str.strip(change[7]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[14]):
-                                print("zmieniam")
-                                setInDict(data, pathWithColorsToChange, [int(change[0]),int(change[1]),int(change[2]),int(change[3])])
+                        try:
+                            colorsToChange = [int(change[9]),int(change[10]),int(change[11]),int(change[12])]
+                        except:
+                            colorsToChange = 0
+                        #pathOfColorToChange = ''
+                        #for pathElement in change[14:]:
+                        #    pathOfColorToChange += str.strip(pathElement)
+                        if  len(change)>14 and str.strip(change[7]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[14]):
+                            print("zmieniam")
+                            setInDict(data, pathWithColorsToChange, [int(change[0]),int(change[1]),int(change[2]),int(change[3])])
     dictIter(data, **kwargs)
 
 nazwaPliku = "ABNowaKompozycjaBDOT10k.mapx"
@@ -79,10 +79,8 @@ with open(nazwaPliku, encoding='utf-8') as data_file:
 
 file_object = open("ABNowaKompozycjaBDOT10k_ścieżki_kolory2.csv", "r", encoding='utf-8')
 csv = csv.reader(file_object, delimiter = ";")
-
-mapxChange(data, colorModel = r"CIM.*Color", dataFromCsv = csv)
-
-
+for change in csv:
+    mapxChange(data, colorModel = r"CIM.*Color", actualCsvRow = change)
 
 nowaNazwa = nazwaPliku[:-5] + '_zmieniony.mapx'
 changedFile = open(nowaNazwa, "w", encoding='utf-8')
