@@ -58,18 +58,13 @@ def mapxChange(data, **kwargs):
                     except:
                         layerName = ""
                     if layerName != "":
-                        #print(layerName)
                         change = kwargs['actualCsvRow']
-                        #pathWithoutCModelAColors = pathWithoutListIndexes + ['values'] + [str(colorModel)] + [str(actualColors)] + [layerName]
                         try:
                             colorsToChange = [int(change[9]),int(change[10]),int(change[11]),int(change[12])]
                         except:
                             colorsToChange = 0
-                        #pathOfColorToChange = ''
-                        #for pathElement in change[14:]:
-                        #    pathOfColorToChange += str.strip(pathElement)
                         if  len(change)>14 and str.strip(change[7]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[14]):
-                            print("zmieniam")
+                            print("Zmieniono kolor dla wiersza nr " + kwargs['rowIndex'])
                             setInDict(data, pathWithColorsToChange, [int(change[0]),int(change[1]),int(change[2]),int(change[3])])
     dictIter(data, **kwargs)
 
@@ -78,9 +73,20 @@ with open(nazwaPliku, encoding='utf-8') as data_file:
     data = json.load(data_file)
 
 file_object = open("ABNowaKompozycjaBDOT10k_ścieżki_kolory2.csv", "r", encoding='utf-8')
-csv = csv.reader(file_object, delimiter = ";")
-for change in csv:
-    mapxChange(data, colorModel = r"CIM.*Color", actualCsvRow = change)
+csv = csv.reader(file_object, delimiter = "|")
+for i, change in enumerate(csv):
+    try:
+        change[0] = float(change[0])
+        change[1] = float(change[1])
+        change[2] = float(change[2])
+        change[3] = float(change[3])
+    except:
+        #print("Nie podano liczb dla wiersza nr " + str(i))
+        pass
+    if change[0] and change[1] and change[2] and change[3]:
+        mapxChange(data, colorModel = r"CIM.*Color", actualCsvRow = change, rowIndex = i)
+    #else:
+        #print("Kolor dla wiersza nr " + str(i) + " nie został zmieniony")
 
 nowaNazwa = nazwaPliku[:-5] + '_zmieniony.mapx'
 changedFile = open(nowaNazwa, "w", encoding='utf-8')
