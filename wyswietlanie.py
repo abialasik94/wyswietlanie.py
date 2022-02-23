@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
+import simplejson as json
 import re
 from functools import reduce  # forward compatibility for Python 3
 import operator
 
 path = []
-output = "Do wpisania| wartości| nowego koloru|(1.-4. obowiązkowe|, 5. opcjonalna)|Nazwa warstwy|Model koloru|Wartości| starego| koloru (1.-4.| obowiązkowe,| 5. opcjonalna)|Ścieżka po węzłach| \n"
+output = "R|G|B|T|Opt|Warstwa|ModelKoloru|Clr1|Clr2|Clr3|Clr4|Clr5)|Sklejka|CIMClass|MapLyr|RenderLabelSelect|Prm1|Prm2|Prm3|Prm4|Prm5|Prm6|Prm7|Prm8 \n"
 pathWithoutListIndexes = []
 pathsWithoutListIndexes = []
 def mapxPrint(data, **kwargs):
@@ -53,9 +53,13 @@ def mapxPrint(data, **kwargs):
                     actualColors = getFromDict(data, pathWithColorsToChange)
                     colorModel = getFromDict(data, path + ['type'])
                     try:
-                        layerName = "|||||" + str(getFromDict(data, path[:2] + ['name'])) + " | "
+                        layerName = "|||||" + str(getFromDict(data, path[:2] + ['name'])) + "|"
                     except:
-                        layerName = "|||||"
+                        layerName = "||||||"
+                    try:
+                        secondName = str(getFromDict(data, path[:4] + ['type'])) + "|"
+                    except:
+                        secondName = "|"
                     pathWithoutCModelAColors = pathWithoutListIndexes + ['values'] + [str(colorModel)] + [str(actualColors)] + [layerName]
                     if pathWithoutCModelAColors not in pathsWithoutListIndexes:
                         pathsWithoutListIndexes.append(pathWithoutCModelAColors)
@@ -64,7 +68,7 @@ def mapxPrint(data, **kwargs):
                         except:
                             fiftcolor = ""
                         global output
-                        output += layerName + str(colorModel) + "|" + str(actualColors[0]) + "|" + str(actualColors[1]) + "|" + str(actualColors[2]) + "|" + str(actualColors[3]) + "|" + fiftcolor + "|" + "_".join(pathWithoutListIndexes) + "|".join(pathWithoutListIndexes)  + "\n"
+                        output += layerName + str(colorModel) + "|" + str(actualColors[0]) + "|" + str(actualColors[1]) + "|" + str(actualColors[2]) + "|" + str(actualColors[3]) + "|" + fiftcolor + "|" + "_".join(pathWithoutListIndexes) + "|" + secondName + "|".join(pathWithoutListIndexes)  + "\n"
 
     dictIter(data, **kwargs)
     global output
@@ -76,3 +80,9 @@ with open(nazwaPliku, encoding='utf-8') as data_file:
     data = json.load(data_file)
 
 mapxPrint(data, colorModel = r"CIM.*Color")
+
+# nowaNazwa = nazwaPliku[:-5] + '_zmieniony.mapx'
+# changedFile = open(nowaNazwa, "w", encoding='utf-8')
+# #dataToJson = json.dumps(data, ensure_ascii=False, encoding="utf-8")
+# json.dump(data, changedFile, indent = 6, ensure_ascii=False, encoding="utf-8")
+# changedFile.close()

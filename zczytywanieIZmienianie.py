@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
+import simplejson as json
 import re
 from functools import reduce  # forward compatibility for Python 3
 import operator
@@ -51,6 +51,7 @@ def mapxChange(data, **kwargs):
                 isValue = getFromDict(data, path)
                 if re.match(kwargs['colorModel'], str(v)) and 'values' in isValue:
                     pathWithColorsToChange = path + ['values']
+                    pathWithModelToChange = path + ['type']
                     actualColors = getFromDict(data, pathWithColorsToChange)
                     colorModel = getFromDict(data, path + ['type'])
                     try:
@@ -60,19 +61,23 @@ def mapxChange(data, **kwargs):
                     if layerName != "":
                         change = kwargs['actualCsvRow']
                         try:
-                            colorsToChange = [int(change[7]),int(change[8]),int(change[9]),int(change[10])]
+                            if (getFromDict(data, pathWithModelToChange)) != "CIMCMYKColor":
+                                colorsToChange = [int(change[7]),int(change[8]),int(change[9]),int(change[10])]
+                            else:
+                                colorsToChange = [int(change[7]), int(change[8]), int(change[9]), int(change[10]), int(change[11])]
                         except:
                             colorsToChange = 0
                         if  str.strip(change[6]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[12]):
-                            print("Zmieniono kolor dla wiersza nr " + str(kwargs['rowIndex']))
+                            print("Zmieniono kolor dla wiersza nr " + str(kwargs['rowIndex']+1))
                             setInDict(data, pathWithColorsToChange, [int(change[0]),int(change[1]),int(change[2]),int(change[3])])
+                            setInDict(data, pathWithModelToChange, "CIMRGBColor")
     dictIter(data, **kwargs)
 
 nazwaPliku = "ABNowaKompozycjaBDOT10k.mapx"
 with open(nazwaPliku, encoding='utf-8') as data_file:
     data = json.load(data_file)
 
-file_object = open("ABNowaKompozycjaBDOT10k_ścieżki_kolory2.csv", "r", encoding='utf-8')
+file_object = open("Test08.csv", "r", encoding='utf-8')
 csv = csv.reader(file_object, delimiter = "|")
 for i, change in enumerate(csv):
     try:
@@ -83,12 +88,12 @@ for i, change in enumerate(csv):
     except:
         #print("Nie podano liczb dla wiersza nr " + str(i))
         pass
-    if i > 2 and isinstance(change[0], (float)) and isinstance(change[1], (float)) and isinstance(change[2], (float)) and isinstance(change[3], (float)):
+    if i > 2 and isinstance(change[0], (float)) and isinstance(change[1], (float)) and isinstance(change[2], (float)):
         mapxChange(data, colorModel = r"CIM.*Color", actualCsvRow = change, rowIndex = i)
     #else:
         #print("Kolor dla wiersza nr " + str(i) + " nie został zmieniony")
 
 nowaNazwa = nazwaPliku[:-5] + '_zmieniony.mapx'
 changedFile = open(nowaNazwa, "w", encoding='utf-8')
-json.dump(data, changedFile, indent = 6)
+json.dump(data, changedFile, indent = 6, ensure_ascii=False, encoding="utf-8")
 changedFile.close()
