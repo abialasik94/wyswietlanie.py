@@ -24,3 +24,32 @@ https://hackersandslackers.com/extract-data-from-complex-json-python/
 
 Wymyślone rozwiązanie do przetestowania:
 na wejściu ścieżka, np. ['layerDefinitions'][0], wejście dictItems do tej ścieżki i zmiana wszystkich kolorów poniżej jej.
+
+w oparciu o "type" : "CIMGroupLayer",
+
+"layerDefinitions" : [
+{
+"type" : "CIMGroupLayer",
+wylistować typy z powyższego typu
+
+czy można odsiać wpisy dla group layer
+--------------------------------------------------------------------------------------
+mapx - listować tylko warstwy, które są włączone i jeśli listuję kolory związane z etykietami to są 2 poziomy włączenia:
+1 - etykietowanie dla całej warstwy
+2 - włączenie poszczególnych klas etykiet
+
+Listowanie kolorów dla danej klasy etykiet tylko, gdy aktywne są 2 powyższe klasy
+
+
+----------------------------------------------------
+zmiana pierwszych liter z małych na duże
+regex: name" : "[A-Z].*"
+
+----------------------------------------------------
+czarno - biała kompozycja:
+1. podejście - wypełnić excela i dla każdego koloru ustala się jaki kolor będziem miałw nowej wersji
+2. podejście - automatyczna konwersja, że mapuje na podstawie excela, a druga opcja to bierze każdy kolor i poprzez transformację
+RGB -> HSV i z powrotem, 
+
+Druga rzecz:
+W części stworzonej - jeśli warstwa jest wyłączona to w ogóle jej nie analizuję

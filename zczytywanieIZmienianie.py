@@ -68,7 +68,7 @@ def mapxChange(data, **kwargs):
                         except:
                             colorsToChange = 0
                         if  str.strip(change[6]) == colorModel and actualColors == colorsToChange and layerName == str.strip(change[5]) and "_".join(pathWithoutListIndexes) == str.strip(change[12]):
-                            print("Zmieniono kolor dla wiersza nr " + str(kwargs['rowIndex']+1))
+                            print(f"Zmieniono kolor dla wiersza nr {kwargs['rowIndex']+1}")
                             setInDict(data, pathWithColorsToChange, [int(change[0]),int(change[1]),int(change[2]),int(change[3])])
                             setInDict(data, pathWithModelToChange, "CIMRGBColor")
     dictIter(data, **kwargs)
@@ -77,7 +77,7 @@ nazwaPliku = "ABNowaKompozycjaBDOT10k.mapx"
 with open(nazwaPliku, encoding='utf-8') as data_file:
     data = json.load(data_file)
 
-file_object = open("Test08.csv", "r", encoding='utf-8')
+file_object = open("NightVision12.csv", "r", encoding='utf-8')
 csv = csv.reader(file_object, delimiter = "|")
 for i, change in enumerate(csv):
     try:

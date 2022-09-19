@@ -46,10 +46,11 @@ def mapxPrint(data, **kwargs):
                 global pathsWithoutListIndexes
                 isValue = getFromDict(data, path)
                 if re.match(kwargs['colorModel'], str(v)) and 'values' in isValue :
-                    #print(pathWithoutListIndexes)
-                    #print(pathsWithoutListIndexes)
                     pathWithColorsToChange = path + ['values']
-                    #setInDict(data, pathWithColorsToChange, kwargs['colorValues'])
+                    try:
+                        print(getFromDict(data, path[:2] + ['type']))
+                    except:
+                        continue
                     actualColors = getFromDict(data, pathWithColorsToChange)
                     colorModel = getFromDict(data, path + ['type'])
                     try:
