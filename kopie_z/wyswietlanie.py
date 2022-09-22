@@ -73,10 +73,10 @@ def mapxPrint(data, **kwargs):
 
     dictIter(data, **kwargs)
     global output
-    with open("ABNowaKompozycjaBDOT10k_ścieżki_kolory2.csv", "w", encoding='utf-8') as text_file:
+    with open("ABNowaKompozycjaBDOT10k_ścieżki_kolory3.csv", "w", encoding='utf-8') as text_file:
         text_file.write(str(output))
 
-nazwaPliku = "ABNowaKompozycjaBDOT10k.mapx"
+nazwaPliku = "NowaKompozycjaBDOT10kV3NaSzaro.mapx"
 with open(nazwaPliku, encoding='utf-8') as data_file:
     data = json.load(data_file)
 
